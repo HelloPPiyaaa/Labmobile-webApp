@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <title>Work 2</title>
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-main class='green text-center'>
+        <v-container>
+            <v-card>
+                <v-card-title class='green darken-2 white--text'>{{title}}</v-card-title>
+                <v-card-text class="green lighten-2 pa-6">
+<template v-if="state==0">
+    <v-btn @click="suffer()" class="green darken-3">เริ่มเล่น</v-btn>
+    <v-btn href="index.html" class="red darken-3 white--text">กลับหน้าหลัก</v-btn>
+</template>
+<template v-if="state==1">
+    <v-row>
+        <v-col cols="2" v-for="(c,i) of cards">
+            <img v-if="c.s==0" src="work1/0.png" width="80" height="80" @click="imgclick(c)">
+            <img v-if="c.s==1" :src=" 'work1/'+ c.t +'.png'" width="80" height="80">
+        </v-col>
+    </v-row>
+    <v-btn @click="state=0" class="red darken-3 white--text">เลิกเล่น</v-btn>
+</template>
+<template v-if="state==2">
+    <h1 class="white--text">คุณชนะแล้ว เก่งมาก</h1>
+    <br>
+    <br>
+    <v-btn @click="state=0" class="green darken-3 white--text">ตกลง</v-btn>
+</template>
+                </v-card-text>
+                <v-bottom-navigation class='pa-2 green darken-2 white--text'>{{footer}}</v-bottom-navigation>
+        </v-card> 
+        </v-container>
+      </v-main>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        title : "Work 2: เกมจับคู่ภาพ ด้วย VueJS & VuetifyJS ",
+        footer : "ปิยะรัตน์ อุปชีวะ สาขาเทคโนโลยีสารสนเทศ",
+        state : 0,
+        cards : [],
+        cards_opened :[],
+        cards_count : 0,
+      },
+      vuetify: new Vuetify(),
+      methods: {
+        suffer(){
+            this.state = 1;
+            this.cards=[];
+            this.cards_count=36;
+            for(var i=1;i<=18;i++){
+                this.cards.push({t:i, s:0});
+                this.cards.push({t:i, s:0});
+            }
+            for(var i=0;i<100;i++){
+                var a=Math.round(Math.random()*35);
+                var b=Math.round(Math.random()*35);
+                var t=this.cards[a];
+                this.cards[a]=this.cards[b];
+                this.cards[b]=t;
+            }
+        },
+        imgclick(c){
+            if(this.cards_opened.length<2){
+                c.s = 1;
+                this.cards_opened.push(c);
+                if(this.cards_opened.length==2){
+                    setTimeout(this.checkCard, 1000);
+                }
+            }
+        },
+        checkCard(){
+        var a=this.cards_opened[0];
+        var b=this.cards_opened[1];
+        this.cards_opened=[];
+        if(a.t==b.t){
+            a.s = 2;
+            b.s = 2;
+            this.cards_count -= 2;
+        }else{
+            a.s = 0;
+            b.s = 0;
+        }
+        if(this.cards_count==0){
+            this.state = 2;
+        }
+      }
+      }
+    })
+  </script>
+</body>
+</html>
